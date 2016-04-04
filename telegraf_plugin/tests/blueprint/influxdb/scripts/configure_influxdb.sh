@@ -1,5 +1,5 @@
 #!/bin/bash -e
-. $(ctx download-resource "components/utils")
+. $(ctx download-resource "utils")
 
 ctx logger info "configuring hosts file..."
 echo $(ctx instance runtime_properties vm_influxdb_master_ip)	vm-influxdb-master | sudo tee -a sudo /etc/hosts >/dev/null

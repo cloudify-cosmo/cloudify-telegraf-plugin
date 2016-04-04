@@ -1,5 +1,5 @@
 #!/bin/bash -e
-. $(ctx download-resource "components/utils")
+. $(ctx download-resource "utils")
 
 start_service influxdb
 
