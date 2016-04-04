@@ -48,7 +48,7 @@ def create():
     ctx.instance.runtime_properties['telegraf_path'] = telegraf_path = '/opt/telegraf'
 
     if not os.path.exists(telegraf_path):
-        os.makedirs(telegraf_path)
+        os.system('sudo mkdir -p {0}'.format(telegraf_path))
 
     os.chdir(telegraf_path)
 
