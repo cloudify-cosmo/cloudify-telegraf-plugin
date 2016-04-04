@@ -81,7 +81,7 @@ def start(config_file=None):
     # starting the telegraf service with the right config file
     # need to validate inputs\outputs correctness?
     if config_file==None:
-        config_file = '/etc/opt/telegraf/telegraf.conf'
+        config_file = '/etc/telegraf/telegraf.conf'
     if not os.path.isfile(config_file):
         raise exceptions.NonRecoverableError("Config file doesn't exists")
 
