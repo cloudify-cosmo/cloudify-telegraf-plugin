@@ -57,9 +57,9 @@ def create():
         if dist == 'ubuntu' or dist == 'debian':
             print('downloading telegraf')
             telegraf_file = urllib.urlretrieve('http://get.influxdb.org/telegraf/telegraf_0.11.1-1_amd64.deb')
-            print(os.getcwd())
-            print(telegraf_file)
-            print('telegraf downloaded...installing..')
+            ctx.logger.info(os.getcwd())
+            ctx.logger.info(telegraf_file)
+            ctx.logger.info('telegraf downloaded...installing..')
             os.system('sudo dpkg -i {0}'.format(telegraf_file))
         elif dist == 'centos' or dist == 'redhat':
             urllib.urlretrieve('http://get.influxdb.org/telegraf/telegraf-0.11.1-1.x86_64.rpm', 'telegraf-0.11.1-1.x86_64.rpm')
