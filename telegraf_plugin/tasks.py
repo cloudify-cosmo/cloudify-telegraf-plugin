@@ -58,12 +58,10 @@ def create():
         dist = ld.linux_distribution(full_distribution_name=False)[0]
         if dist == 'ubuntu' or dist == 'debian':
             print('downloading telegraf')
-            telegraf_file = wget.download('http://get.influxdb.org/telegraf/telegraf_0.11.1-1_amd64.deb', '/tmp/telegraf')
+            os.system('sudo wget http://get.influxdb.org/telegraf/telegraf_0.11.1-1_amd64.deb')
             ctx.logger.info(os.getcwd())
-            ctx.logger.info(telegraf_file)
             ctx.logger.info('telegraf downloaded...installing..')
-            os.system('sudo mv {0} {1}'.format(telegraf_file, telegraf_path))
-            os.system('sudo dpkg -i {0}'.format(telegraf_file))
+            os.system('sudo dpkg -i telegraf_0.11.1-1_amd64.deb')
         elif dist == 'centos' or dist == 'redhat':
             urllib.urlretrieve('http://get.influxdb.org/telegraf/telegraf-0.11.1-1.x86_64.rpm', 'telegraf-0.11.1-1.x86_64.rpm')
             os.system('sudo yum localinstall telegraf-0.11.1-1.x86_64.rpm')
