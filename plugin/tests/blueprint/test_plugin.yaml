@@ -1,0 +1,14 @@
+plugins:
+  # Name could be anything, this name is what appears on the beginning of operation
+  # mappings.
+  telegraf:
+    # Could be 'central_deployment_agent' or 'host_agent'.
+    # If 'central_deployment_agent', this plugin will be executed on the
+    # deployment dedicated agent, other wise it will be executed on the host agent.
+    executor: host_agent
+
+    # URL to archive containing the plugin or name of directory containing
+    # the plugin if it is included in the the blueprint directory under the
+    # "plugins" directory.
+    source: /home/workspace/cloudify/version/cloudify/cloudify-telegraf-plugin
+    package_name: cloudify-telegraf-plugin
