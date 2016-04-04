@@ -26,6 +26,7 @@ import os
 import urllib
 from sys import platform as _platform
 import ld
+import wget
 from subprocess import call, Popen
 
 
@@ -56,7 +57,7 @@ def create():
         dist = ld.linux_distribution(full_distribution_name=False)[0]
         if dist == 'ubuntu' or dist == 'debian':
             print('downloading telegraf')
-            telegraf_file = urllib.urlretrieve('http://get.influxdb.org/telegraf/telegraf_0.11.1-1_amd64.deb')
+            telegraf_file = wget.download('http://get.influxdb.org/telegraf/telegraf_0.11.1-1_amd64.deb')
             ctx.logger.info(os.getcwd())
             ctx.logger.info(telegraf_file)
             ctx.logger.info('telegraf downloaded...installing..')
