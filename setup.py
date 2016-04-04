@@ -27,6 +27,6 @@ setup(
     license='LICENSE',
     description='Plugin for running telegraf monitoring interface',
     install_requires=[
-        'cloudify-plugins-common>=3.3', 'ld'
+        'cloudify-plugins-common>=3.3', 'ld', 'wget'
     ]
 )

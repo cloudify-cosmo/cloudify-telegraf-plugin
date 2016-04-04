@@ -26,6 +26,7 @@ import os
 import urllib
 from sys import platform as _platform
 import ld
+import wget
 from subprocess import call, Popen
 
 
@@ -55,11 +56,13 @@ def create():
     if _platform == "linux" or _platform == "linux2":
         dist = ld.linux_distribution(full_distribution_name=False)[0]
         if dist == 'ubuntu' or dist == 'debian':
-            urllib.urlretrieve('wget http://get.influxdb.org/telegraf/telegraf_0.11.1-1_amd64.deb', 'telegraf_0.11.1-1_amd64.deb')
-            os.system('sudo dpkg -i telegraf_0.11.1-1_amd64.deb')
+            url = 'http://get.influxdb.org/telegraf/telegraf_0.11.1-1_amd64.deb'
+            telegraf_file = wget.download(url)
+            os.system('sudo dpkg -i {0}'.format(telegraf_file))
         elif dist == 'centos' or dist == 'redhat':
-            urllib.urlretrieve('wget http://get.influxdb.org/telegraf/telegraf-0.11.1-1.x86_64.rpm', 'telegraf-0.11.1-1.x86_64.rpm')
-            os.system('sudo yum localinstall telegraf-0.11.1-1.x86_64.rpm')
+            url = 'http://get.influxdb.org/telegraf/telegraf-0.11.1-1.x86_64.rpm'
+            telegraf_file = wget.download(url)
+            os.system('sudo dpkg -i {0}'.format(telegraf_file))
     elif _platform == "darwin":
         os.system('brew update')
         os.system('brew install telegraf')
