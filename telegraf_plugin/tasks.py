@@ -74,7 +74,7 @@ def create():
 def configure():
     # generating configuration file with elected outputs & inputs.
     # input is dict\json
-    ctx.download_resource_and_render('telegraf.toml', '/etc/opt/telegraf/telegraf.conf')
+    ctx.download_resource_and_render('telegraf.toml', '/etc/telegraf/telegraf.conf')
 
 @operation
 def start(config_file=None):
