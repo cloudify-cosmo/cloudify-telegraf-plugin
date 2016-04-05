@@ -60,6 +60,7 @@ def create(telegraf_path=None, download_url=None):
             if download_url is None:
                 download_url = 'http://get.influxdb.org/telegraf/\
                 telegraf_0.11.1-1_amd64.deb'
+            ctx.logger.info('downlading telegraf...')
             call('sudo wget {0}'.format(download_url))
             ctx.logger.info('telegraf downloaded...installing..')
             call('sudo dpkg -i {0}'.format(
