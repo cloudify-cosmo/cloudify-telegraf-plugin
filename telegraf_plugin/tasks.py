@@ -12,22 +12,18 @@
 #    * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    * See the License for the specific language governing permissions and
 #    * limitations under the License.
-
+########
 
 # ctx is imported and used in operations
 from cloudify import ctx
 from cloudify import exceptions
-from cloudify import utils
-
 
 # put the operation decorator on any function that is a task
 from cloudify.decorators import operation
 import os
-import urllib
 from sys import platform as _platform
 import ld
-import wget
-from subprocess import call, Popen
+from subprocess import call
 
 
 @operation
@@ -41,46 +37,57 @@ def install(**kwargs):
     ctx.logger.info("telegraf.toml was configured...")
     ctx.logger.info("starting telegraf service...")
     start()
-    ctx.logger.info("GoodLuck! telegraf service is up! have an awesome monitoring experience...")
+    ctx.logger.info("GoodLuck! telegraf service is up!\
+                    have an awesome monitoring experience...")
+
 
 @operation
-def create():
+def create(telegraf_path=None, download_url=None):
     # download and install the telegraf servivce
-    ctx.instance.runtime_properties['telegraf_path'] = telegraf_path = '/opt/telegraf'
+    if telegraf_path is None:
+        telegraf_path = '/opt/telegraf'
+
+    ctx.instance.runtime_properties['telegraf_path'] = telegraf_path
 
     if not os.path.exists(telegraf_path):
-        os.system('sudo mkdir -p {0}'.format(telegraf_path))
+        call('sudo mkdir -p {0}'.format(telegraf_path))
 
-    os.system('sudo mkdir -p {0}'.format('/tmp/telegraf'))
     os.chdir(telegraf_path)
 
     if _platform == "linux" or _platform == "linux2":
         dist = ld.linux_distribution(full_distribution_name=False)[0]
         if dist == 'ubuntu' or dist == 'debian':
-            print('downloading telegraf')
-            os.system('sudo wget http://get.influxdb.org/telegraf/telegraf_0.11.1-1_amd64.deb')
-            ctx.logger.info(os.getcwd())
+            if download_url is None:
+                download_url = 'http://get.influxdb.org/telegraf/\
+                telegraf_0.11.1-1_amd64.deb'
+            call('sudo wget {0}'.format(download_url))
             ctx.logger.info('telegraf downloaded...installing..')
-            os.system('sudo dpkg -i telegraf_0.11.1-1_amd64.deb')
+            call('sudo dpkg -i {0}'.format(
+                download_url.rsplit('/', 1)[-1]))
         elif dist == 'centos' or dist == 'redhat':
-            urllib.urlretrieve('http://get.influxdb.org/telegraf/telegraf-0.11.1-1.x86_64.rpm', 'telegraf-0.11.1-1.x86_64.rpm')
-            os.system('sudo yum localinstall telegraf-0.11.1-1.x86_64.rpm')
-    elif _platform == "darwin":
-        os.system('brew update')
-        os.system('brew install telegraf')
-    # no windows distribution
+            if download_url is None:
+                download_url = 'sudo wget http://get.influxdb.org/telegraf/\
+                telegraf-0.11.1-1.x86_64.rpm'
+            call('sudo wget {0}'.format(download_url))
+            ctx.logger.info('telegraf downloaded...installing..')
+            call('sudo yum localinstall {0}'.format(
+                download_url.rsplit('/', 1)[-1]))
+
 
 @operation
 def configure():
     # generating configuration file with elected outputs & inputs.
     # input is dict\json
     conf_file = ctx.download_resource_and_render('telegraf.toml')
-    os.system('sudo mv {0} /etc/telegraf/telegraf.conf'.format(conf_file))
+    # need to edit metrocs and inputs
+    call('sudo mv {0} /etc/telegraf/telegraf.conf'.format(conf_file))
+
+
 @operation
 def start(config_file=None):
     # starting the telegraf service with the right config file
     # need to validate inputs\outputs correctness?
-    if config_file==None:
+    if config_file is None:
         config_file = '/etc/telegraf/telegraf.conf'
     if not os.path.isfile(config_file):
         raise exceptions.NonRecoverableError("Config file doesn't exists")
@@ -88,4 +95,5 @@ def start(config_file=None):
     cmd = 'sudo service telegraf start'
     return_code = call(cmd.split())
     if return_code != 0:
-        raise exceptions.NonRecoverableError('Telegraf service failed to start')
+        raise exceptions.NonRecoverableError(
+            'Telegraf service failed to start')

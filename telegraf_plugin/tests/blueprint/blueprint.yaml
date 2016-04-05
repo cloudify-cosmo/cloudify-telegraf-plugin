@@ -112,19 +112,9 @@ node_templates:
             install:
                 implementation: telegraf.telegraf_plugin.tasks.install
 
+
   influxdb:
     type: my_types.nodes.InfluxdbNode
     relationships:
       - type: cloudify.relationships.contained_in
         target: VM
-
-#  telegraf:
-#    type: cloudify.nodes.Compute
-#    relationships:
-#      - type: cloudify.relationships.contained_in
-#        target: VM
-#      - type: cloudify.relationships.depends_on
-#        target: influxdb
-#    interface:
-#      cloudify.interfaces.relationship_lifecycle:
-#        crate: cloudify-telegraf-plugin.telegraf_plugin.tasks.install
