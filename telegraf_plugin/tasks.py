@@ -23,7 +23,7 @@ from cloudify.decorators import operation
 import os
 from sys import platform as _platform
 import ld
-from subprocess import call
+from subprocess import call, Popen
 
 
 @operation
@@ -50,7 +50,8 @@ def create(telegraf_path=None, download_url=None):
     ctx.instance.runtime_properties['telegraf_path'] = telegraf_path
 
     if not os.path.exists(telegraf_path):
-        call('sudo mkdir -p {0}'.format(telegraf_path))
+        cmd = 'sudo mkdir -p {0}'.format(telegraf_path)
+        call(cmd.split())
 
     os.chdir(telegraf_path)
 
@@ -58,20 +59,18 @@ def create(telegraf_path=None, download_url=None):
         dist = ld.linux_distribution(full_distribution_name=False)[0]
         if dist == 'ubuntu' or dist == 'debian':
             if download_url is None:
-                download_url = 'http://get.influxdb.org/telegraf/\
-                telegraf_0.11.1-1_amd64.deb'
+                download_url = 'http://get.influxdb.org/telegraf/telegraf_0.11.1-1_amd64.deb'
             ctx.logger.info('downlading telegraf...')
-            call('sudo wget {0}'.format(download_url))
+            Popen('sudo wget {0}'.format(download_url), shell=True)
             ctx.logger.info('telegraf downloaded...installing..')
-            call('sudo dpkg -i {0}'.format(
+            Popen('sudo dpkg -i {0}'.format(
                 download_url.rsplit('/', 1)[-1]))
         elif dist == 'centos' or dist == 'redhat':
             if download_url is None:
-                download_url = 'sudo wget http://get.influxdb.org/telegraf/\
-                telegraf-0.11.1-1.x86_64.rpm'
-            call('sudo wget {0}'.format(download_url))
+                download_url = 'sudo wget http://get.influxdb.org/telegraf/telegraf-0.11.1-1.x86_64.rpm'
+            Popen('sudo wget {0}'.format(download_url))
             ctx.logger.info('telegraf downloaded...installing..')
-            call('sudo yum localinstall {0}'.format(
+            Popen('sudo yum localinstall {0}'.format(
                 download_url.rsplit('/', 1)[-1]))
 
 
@@ -81,7 +80,8 @@ def configure():
     # input is dict\json
     conf_file = ctx.download_resource_and_render('telegraf.toml')
     # need to edit metrocs and inputs
-    call('sudo mv {0} /etc/telegraf/telegraf.conf'.format(conf_file))
+    cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(conf_file)
+    call(cmd.split())
 
 
 @operation
@@ -94,7 +94,7 @@ def start(config_file=None):
         raise exceptions.NonRecoverableError("Config file doesn't exists")
 
     cmd = 'sudo service telegraf start'
-    return_code = call(cmd.split())
+    return_code = call(cmd, shell=True)
     if return_code != 0:
         raise exceptions.NonRecoverableError(
             'Telegraf service failed to start')
