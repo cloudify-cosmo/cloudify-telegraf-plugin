@@ -63,8 +63,9 @@ def create(telegraf_path=None, download_url=None):
             ctx.logger.info('downlading telegraf...')
             Popen('sudo wget {0}'.format(download_url), shell=True)
             ctx.logger.info('telegraf downloaded...installing..')
-            Popen('sudo dpkg -i {0}'.format(
-                download_url.split('/')[-1]))
+            telegraf_file = download_url.split('/')[-1]
+            ctx.logger.info(telegraf_file)
+            Popen('sudo dpkg -i {0}'.format(telegraf_file))
         elif dist == 'centos' or dist == 'redhat':
             if download_url is None:
                 download_url = 'sudo wget http://get.influxdb.org/telegraf/telegraf-0.11.1-1.x86_64.rpm'
