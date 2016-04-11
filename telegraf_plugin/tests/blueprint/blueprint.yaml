@@ -113,6 +113,8 @@ node_templates:
                 implementation: telegraf.telegraf_plugin.tasks.create
             configure:
                 implementation: telegraf.telegraf_plugin.tasks.configure
+            start:
+                implementation: telegraf.telegraf_plugin.tasks.start
 
   influxdb:
     type: my_types.nodes.InfluxdbNode
