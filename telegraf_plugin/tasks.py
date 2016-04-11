@@ -59,7 +59,7 @@ def create(telegraf_path=None, download_url=None):
         dist = ld.linux_distribution(full_distribution_name=False)[0]
         if dist == 'ubuntu' or dist == 'debian':
             if download_url is None:
-                download_url = 'http://get.influxdb.org/telegraf/telegraf_0.11.1-1_amd64.deb'
+                download_url = 'http://get.influxdb.org/telegraf/telegraf_0.12.0-1_amd64.deb'
             ctx.logger.info('downlading telegraf...')
             Popen('sudo wget {0}'.format(download_url), shell=True)
             ctx.logger.info('telegraf downloaded...installing..')
@@ -68,7 +68,7 @@ def create(telegraf_path=None, download_url=None):
             Popen('sudo dpkg -i {0}'.format(telegraf_file), shell=True)
         elif dist == 'centos' or dist == 'redhat':
             if download_url is None:
-                download_url = 'sudo wget http://get.influxdb.org/telegraf/telegraf-0.11.1-1.x86_64.rpm'
+                download_url = 'sudo wget http://get.influxdb.org/telegraf/telegraf-0.12.0-1.x86_64.rpm'
             Popen('sudo wget {0}'.format(download_url))
             ctx.logger.info('telegraf downloaded...installing..')
             Popen('sudo yum localinstall {0}'.format(
@@ -79,7 +79,7 @@ def create(telegraf_path=None, download_url=None):
 def configure():
     # generating configuration file with elected outputs & inputs.
     # input is dict\json
-    conf_file = ctx.download_resource_and_render('telegraf.toml')
+    conf_file = ctx.download_resource_and_render('telegraf.conf')
     # need to edit metrocs and inputs
     cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(conf_file)
     call(cmd.split())
