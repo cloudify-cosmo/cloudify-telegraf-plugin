@@ -109,8 +109,10 @@ node_templates:
         target: sg_influxdb
     interfaces:
         cloudify.interfaces.monitoring_agent:
-            install:
-                implementation: telegraf.telegraf_plugin.tasks.install
+            create:
+                implementation: telegraf.telegraf_plugin.tasks.create
+            configure:
+                implementation: telegraf.telegraf_plugin.tasks.configure
 
   influxdb:
     type: my_types.nodes.InfluxdbNode
