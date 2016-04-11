@@ -34,7 +34,7 @@ def install(**kwargs):
     ctx.logger.info("Telegraf service was installed...")
     ctx.logger.info("configuring telegraf.toml...")
     configure()
-    ctx.logger.info("telegraf.toml was configured...")
+    ctx.logger.info("telegraf.conf was configured...")
     ctx.logger.info("starting telegraf service...")
     start()
     ctx.logger.info("GoodLuck! telegraf service is up!\
@@ -60,7 +60,7 @@ def create(telegraf_path=None, download_url=None, **kwargs):
         if dist == 'ubuntu' or dist == 'debian':
             if download_url is None:
                 download_url = 'http://get.influxdb.org/telegraf/telegraf_0.12.0-1_amd64.deb'
-            ctx.logger.info('downlading telegraf...')
+            ctx.logger.info('downloading telegraf...')
             Popen('sudo wget {0}'.format(download_url), shell=True)
             ctx.logger.info('telegraf downloaded...installing..')
             telegraf_file = download_url.split('/')[-1]
@@ -82,7 +82,7 @@ def configure(**kwargs):
     conf_file = ctx.download_resource_and_render('telegraf.conf')
     # need to edit metrocs and inputs
     cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(conf_file)
-    call(cmd.split())
+    Popen(cmd, shell=True)
 
 
 @operation
