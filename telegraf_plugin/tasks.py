@@ -42,7 +42,7 @@ def install(**kwargs):
 
 
 @operation
-def create(telegraf_path=None, download_url=None):
+def create(telegraf_path=None, download_url=None, **kwargs):
     # download and install the telegraf servivce
     if telegraf_path is None:
         telegraf_path = '/opt/telegraf'
@@ -76,7 +76,7 @@ def create(telegraf_path=None, download_url=None):
 
 
 @operation
-def configure():
+def configure(**kwargs):
     # generating configuration file with elected outputs & inputs.
     # input is dict\json
     conf_file = ctx.download_resource_and_render('telegraf.conf')
@@ -86,7 +86,7 @@ def configure():
 
 
 @operation
-def start(config_file=None):
+def start(config_file=None, **kwargs):
     # starting the telegraf service with the right config file
     # need to validate inputs\outputs correctness?
     if config_file is None:
