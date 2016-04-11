@@ -79,9 +79,12 @@ def create(telegraf_path=None, download_url=None, **kwargs):
 def configure(**kwargs):
     # generating configuration file with elected outputs & inputs.
     # input is dict\json
+    ctx.logger.info("1!!!!!!!")
     conf_file = ctx.download_resource_and_render('telegraf.conf')
     # need to edit metrocs and inputs
+    ctx.logger.info("2!!!!!!!!")
     cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(conf_file)
+    ctx.logger.info("3!!!!!!!")
     Popen(cmd, shell=True)
 
 
