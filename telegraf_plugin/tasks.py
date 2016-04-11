@@ -80,7 +80,7 @@ def configure(**kwargs):
     # generating configuration file with elected outputs & inputs.
     # input is dict\json
     ctx.logger.info("1!!!!!!!")
-    conf_file = ctx.download_resource_and_render('telegraf.conf')
+    conf_file = ctx.download_resource_and_render('telegraf.toml')
     # need to edit metrocs and inputs
     ctx.logger.info("2!!!!!!!!")
     cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(conf_file)
