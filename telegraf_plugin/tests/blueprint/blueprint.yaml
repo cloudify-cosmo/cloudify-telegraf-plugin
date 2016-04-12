@@ -111,8 +111,13 @@ node_templates:
       cloudify.interfaces.monitoring_agent:
         install:
             implementation: telegraf.telegraf_plugin.tasks.install
+            inputs:
+              output_type: influxdb
+              output_adrees: localhost
+              database: monitoring_telegraf
         start:
             implementation: telegraf.telegraf_plugin.tasks.start
+
 
   influxdb:
     type: my_types.nodes.InfluxdbNode

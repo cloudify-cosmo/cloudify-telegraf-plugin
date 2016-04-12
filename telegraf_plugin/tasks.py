@@ -27,13 +27,13 @@ from subprocess import call, Popen
 
 
 @operation
-def install(**kwargs):
+def install(telegraf_config, **kwargs):
     # running the full flow of generating telegraf service.
     ctx.logger.info("Installing telegraf...")
     create()
     ctx.logger.info("Telegraf service was installed...")
     ctx.logger.info("configuring telegraf.toml...")
-    configure()
+    configure(telegraf_config)
     ctx.logger.info("telegraf.conf was configured...")
 
 
@@ -74,10 +74,10 @@ def create(telegraf_path=None, download_url=None, **kwargs):
 
 
 @operation
-def configure(**kwargs):
+def configure(telgraf_config, **kwargs):
     # generating configuration file with elected outputs & inputs.
     # input is dict\json
-    conf_file = ctx.download_resource_and_render('telegraf.conf')
+    conf_file = ctx.download_resource_and_render('telegraf.conf', telgraf_config)
     cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(conf_file)
     Popen(cmd, shell=True)
 
@@ -92,7 +92,7 @@ def start(config_file=None, **kwargs):
     if not os.path.isfile(config_file):
         raise exceptions.NonRecoverableError("Config file doesn't exists")
 
-    cmd = 'sudo service telegraf start'
+    cmd = 'sudo service telegraf restart'
     return_code = call(cmd, shell=True)
     if return_code != 0:
         raise exceptions.NonRecoverableError(
