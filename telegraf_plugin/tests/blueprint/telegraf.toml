@@ -75,7 +75,7 @@
   database = "monitoring_telegraf" # required
   ## Retention policy to write to.
   retention_policy = "default"
-  ## Precision of writes, valid values are "ns", "us" (or "µs"), "ms", "s", "m", "h".
+  ## Precision of writes, valid values are "ns", "us", "ms", "s", "m", "h".
   ## note: using "s" precision greatly improves InfluxDB compression.
   precision = "s"
 
