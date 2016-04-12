@@ -64,7 +64,10 @@ def create(telegraf_path=None, download_url=None, **kwargs):
             Popen('sudo wget {0}'.format(download_url), shell=True)
             ctx.logger.info('telegraf downloaded...installing..')
             cmd = 'sudo dpkg -i telegraf_0.12.0-1_amd64.deb'
-            Popen(cmd, shell=True)
+            return_code = call(cmd, shell=True)
+            if return_code != 0:
+                raise exceptions.NonRecoverableError(
+                    'Unable to install Telegraf service')
         elif dist == 'centos' or dist == 'redhat':
             if download_url is None:
                 download_url = 'sudo wget http://get.influxdb.org/telegraf/telegraf-0.12.0-1.x86_64.rpm'
@@ -78,12 +81,8 @@ def create(telegraf_path=None, download_url=None, **kwargs):
 def configure(**kwargs):
     # generating configuration file with elected outputs & inputs.
     # input is dict\json
-    ctx.logger.info("1!!!!!!!")
     conf_file = ctx.download_resource_and_render('telegraf.conf')
-    # need to edit metrocs and inputs
-    ctx.logger.info("2!!!!!!!!")
     cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(conf_file)
-    ctx.logger.info("3!!!!!!!")
     Popen(cmd, shell=True)
 
 
