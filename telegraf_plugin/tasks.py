@@ -77,7 +77,7 @@ def create(telegraf_path=None, download_url=None, **kwargs):
 def configure(telgraf_config, **kwargs):
     # generating configuration file with elected outputs & inputs.
     # input is dict\json
-    conf_file = ctx.download_resource_and_render('telegraf.conf', telgraf_config)
+    conf_file = ctx.download_resource_and_render('telegraf.conf', template_variables=telgraf_config)
     cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(conf_file)
     Popen(cmd, shell=True)
 
