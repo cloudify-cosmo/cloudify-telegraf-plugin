@@ -59,8 +59,7 @@ def create(telegraf_path=None, download_url=None, **kwargs):
             ctx.logger.info('downloading telegraf...')
             Popen('sudo wget {0}'.format(download_url), shell=True)
             ctx.logger.info('telegraf downloaded...installing..')
-            telegraf_file = download_url.rsplit('/', 1)[-1]
-            cmd = 'sudo dpkg -i {0}'.format(telegraf_file)
+            cmd = 'sudo dpkg -i telegraf_0.12.0-1_amd64.deb'
             return_code = call(cmd, shell=True)
             if return_code != 0:
                 raise exceptions.NonRecoverableError(
