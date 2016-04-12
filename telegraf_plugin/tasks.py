@@ -57,7 +57,7 @@ def create(telegraf_path=None, download_url=None, **kwargs):
             if download_url is None:
                 download_url = 'http://get.influxdb.org/telegraf/telegraf_0.12.0-1_amd64.deb'
             ctx.logger.info('downloading telegraf...')
-            Popen('sudo wget {0}'.format(download_url), shell=True)
+            Popen('sudo wget {0}'.format(download_url))
             ctx.logger.info('telegraf downloaded...installing..')
             cmd = 'sudo dpkg -i telegraf_0.12.0-1_amd64.deb'
             Popen(cmd)
