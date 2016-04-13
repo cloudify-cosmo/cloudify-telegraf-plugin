@@ -63,7 +63,6 @@
 ###############################################################################
 #                            OUTPUT PLUGINS                                   #
 ###############################################################################
-
 {% for output in outputs %}
 [[outputs.{{ output }}]]
 	{% for key, value in output %}
@@ -72,7 +71,7 @@
 {% endfor %}
 
 # Configuration for influxdb server to send metrics to
-
+[[outputs.{{ output_type }}]]
   ## The full HTTP or UDP endpoint URL for your InfluxDB instance.
   ## Multiple urls can be specified as part of the same cluster,
   ## this means that only ONE of the urls will be written to each interval.
