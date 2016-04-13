@@ -65,8 +65,8 @@
 ###############################################################################
 {% for output in outputs %}
 [[outputs.{{ output }}]]
-    {% for key in output %}
-	{{ key }} = "{{ key.value }}"
+    {% for key, value in output %}
+	{{ key }} = "{{ value }}"
     {% endfor %}
 {% endfor %}
 
