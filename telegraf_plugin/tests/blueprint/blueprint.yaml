@@ -114,10 +114,10 @@ node_templates:
             inputs:
               telegraf_config:
                 outputs:
-                  - influxdb:
-                      output_address: localhost
-                      database: monitoring_telegraf
-                      precision: s
+                  influxdb:
+                    output_address: localhost
+                    database: monitoring_telegraf
+                    precision: s
         start:
             implementation: telegraf.telegraf_plugin.tasks.start
 
