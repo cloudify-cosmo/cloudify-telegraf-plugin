@@ -115,7 +115,7 @@ node_templates:
               telegraf_config:
                 outputs:
                   influxdb:
-                    output_address: http://localhost:8086
+                    output_address: ["http://localhost:8086"]
                     database: monitoring_telegraf
                     precision: s
                   datadog:
