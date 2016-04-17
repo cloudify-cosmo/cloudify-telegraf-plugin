@@ -121,11 +121,11 @@ node_templates:
                   datadog:
                     apikey: sec
                 inputs:
-                  kernel:
-                  mem:
-                  system:
-                  processes:
-                  swap:
+                  kernel
+                  mem
+                  system
+                  processes
+                  swap
                   cpu:
                     percpu: true
                     totalcpu: true
