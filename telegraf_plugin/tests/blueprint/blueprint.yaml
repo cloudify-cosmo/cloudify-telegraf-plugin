@@ -116,7 +116,7 @@ node_templates:
                 outputs:
                   influxdb:
                     urls:
-                      - "http://localhost:8086"
+                      - http://localhost:8086
                     database: monitoring_telegraf
                     precision: s
                   datadog:
@@ -131,11 +131,11 @@ node_templates:
                     percpu: false
                     totalcpu: true
                     fielddrop:
-                      - "time_*"
+                      - time_*
                   disk:
                     ignore_fs:
-                      - "tmpfs"
-                      - "devtmpfs"
+                      - tmpfs
+                      - devtmpfs
         start:
             implementation: telegraf.telegraf_plugin.tasks.start
 
