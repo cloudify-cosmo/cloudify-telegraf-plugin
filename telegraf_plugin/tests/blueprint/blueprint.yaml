@@ -112,6 +112,7 @@ node_templates:
         install:
             implementation: telegraf.telegraf_plugin.tasks.install
             inputs:
+              config_file:
               telegraf_config:
                 outputs:
                   influxdb:

@@ -27,13 +27,13 @@ from subprocess import call, Popen
 
 
 @operation
-def install(telegraf_config, **kwargs):
+def install(telegraf_config, config_file=None, **kwargs):
     # running the full flow of generating telegraf service.
     ctx.logger.info("Installing telegraf...")
     create()
     ctx.logger.info("Telegraf service was installed...")
     ctx.logger.info("configuring telegraf.toml...")
-    configure(telegraf_config)
+    configure(telegraf_config, config_file)
     ctx.logger.info("telegraf.conf was configured...")
 
 
@@ -74,11 +74,12 @@ def create(telegraf_path=None, download_url=None, **kwargs):
 
 
 @operation
-def configure(telgraf_config, **kwargs):
+def configure(telgraf_config, config_file=None,  **kwargs):
     # generating configuration file with elected outputs & inputs.
     # input is dict\json
-    conf_file = ctx.download_resource_and_render('telegraf.conf', template_variables=telgraf_config)
-    cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(conf_file)
+    if config_file is None:
+        config_file = ctx.download_resource_and_render('telegraf.conf', template_variables=telgraf_config)
+    cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(config_file)
     Popen(cmd, shell=True)
 
 
