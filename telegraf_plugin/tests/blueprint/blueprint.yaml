@@ -119,9 +119,9 @@ node_templates:
                     urls:
                       - http://localhost:8086
                     database: monitoring_telegraf
-                    precision: s
+                    precision: 0
                   datadog:
-                    apikey: sec
+                    apikey: 1
                 inputs:
                   kernel:
                   mem:
