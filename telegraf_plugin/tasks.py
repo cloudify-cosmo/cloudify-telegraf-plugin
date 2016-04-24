@@ -45,7 +45,7 @@ def start(config_file='', **kwargs):
         raise exceptions.NonRecoverableError("Config file doesn't exists")
 
     cmd = 'sudo service telegraf restart'
-    return_code = call(cmd, shell=True)
+    return_code = subprocess.call(cmd, shell=True)
     if return_code != 0:
         raise exceptions.NonRecoverableError(
             'Telegraf service failed to start')
