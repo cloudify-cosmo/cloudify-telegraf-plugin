@@ -20,13 +20,13 @@ from setuptools import setup
 
 setup(
     name='cloudify-telegraf-plugin',
-    version='1.0',
+    version='0.1',
     author='Gigaspaces',
     author_email='cosmo-admin@gigaspaces.com',
     packages=['telegraf_plugin'],
     license='LICENSE',
     description='Plugin for running telegraf monitoring interface',
     install_requires=[
-        'cloudify-plugins-common>=3.3', 'ld', 'wget'
+        'cloudify-plugins-common>=3.3', 'ld=0.6.0'
     ]
 )

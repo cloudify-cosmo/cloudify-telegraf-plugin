@@ -112,6 +112,8 @@ node_templates:
         install:
             implementation: telegraf.telegraf_plugin.tasks.install
             inputs:
+              telegraf_path: /opt/telegraf
+              download_url:
               config_file:
               telegraf_config:
                 outputs:

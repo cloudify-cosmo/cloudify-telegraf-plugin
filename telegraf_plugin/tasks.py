@@ -1,94 +1,45 @@
 ########
 # Copyright (c) 2014 GigaSpaces Technologies Ltd. All rights reserved
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
+# Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
 #        http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
+# distributed under the License is distributed on an 'AS IS' BASIS,
 #    * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    * See the License for the specific language governing permissions and
 #    * limitations under the License.
 ########
 
+import os
+import sys
+import subprocess
+
+import ld
+import shlex
+
 # ctx is imported and used in operations
 from cloudify import ctx
 from cloudify import exceptions
-
-# put the operation decorator on any function that is a task
 from cloudify.decorators import operation
-import os
-from sys import platform as _platform
-import ld
-from subprocess import call, Popen
 
 
 @operation
-def install(telegraf_config, config_file=None, **kwargs):
-    # running the full flow of generating telegraf service.
-    ctx.logger.info("Installing telegraf...")
-    create()
-    ctx.logger.info("Telegraf service was installed...")
-    ctx.logger.info("configuring telegraf.toml...")
+def install(telegraf_config, config_file, telegraf_path, download_url, **kwargs):
+    if 'linux' not in sys._platform:
+        raise exceptions.NonRecoverableError('Error! Telegraf-plugin is available on linux distribution only')
+
+    download_and_install(telegraf_path, download_url)
     configure(telegraf_config, config_file)
-    ctx.logger.info("telegraf.conf was configured...")
 
 
 @operation
-def create(telegraf_path=None, download_url=None, **kwargs):
-    # download and install the telegraf servivce
-    if telegraf_path is None:
-        telegraf_path = '/opt/telegraf'
-
-    ctx.instance.runtime_properties['telegraf_path'] = telegraf_path
-
-    if not os.path.exists(telegraf_path):
-        cmd = 'sudo mkdir -p {0}'.format(telegraf_path)
-        call(cmd.split())
-
-    os.chdir(telegraf_path)
-
-    if _platform == "linux" or _platform == "linux2":
-        dist = ld.linux_distribution(full_distribution_name=False)[0]
-        if dist == 'ubuntu' or dist == 'debian':
-            if download_url is None:
-                download_url = 'http://get.influxdb.org/telegraf/telegraf_0.12.0-1_amd64.deb'
-            ctx.logger.info('downloading telegraf...')
-            os.system('sudo wget {0}'.format(download_url))
-            ctx.logger.info('telegraf downloaded...installing..')
-            cmd = 'sudo dpkg -i telegraf_0.12.0-1_amd64.deb'
-            os.system(cmd)
-            # if return_code != 0:
-            #     raise exceptions.NonRecoverableError(
-            #         'Unable to install Telegraf service')
-        elif dist == 'centos' or dist == 'redhat':
-            if download_url is None:
-                download_url = 'sudo wget http://get.influxdb.org/telegraf/telegraf-0.12.0-1.x86_64.rpm'
-            Popen('sudo wget {0}'.format(download_url))
-            ctx.logger.info('telegraf downloaded...installing..')
-            Popen('sudo yum localinstall {0}'.format(
-                download_url.rsplit('/', 1)[-1]))
-
-
-@operation
-def configure(telgraf_config, config_file=None,  **kwargs):
-    # generating configuration file with elected outputs & inputs.
-    # input is dict\json
-    if config_file is None:
-        config_file = ctx.download_resource_and_render('telegraf.conf', template_variables=telgraf_config)
-    cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(config_file)
-    Popen(cmd, shell=True)
-
-
-@operation
-def start(config_file=None, **kwargs):
-    # starting the telegraf service with the right config file
-    # need to validate inputs\outputs correctness?
-    ctx.logger.info("starting telegraf service...")
-    if config_file is None:
+def start(config_file='', **kwargs):
+    ctx.logger.info('Starting telegraf service...')
+    if not config_file:
         config_file = '/etc/telegraf/telegraf.conf'
     if not os.path.isfile(config_file):
         raise exceptions.NonRecoverableError("Config file doesn't exists")
@@ -98,5 +49,52 @@ def start(config_file=None, **kwargs):
     if return_code != 0:
         raise exceptions.NonRecoverableError(
             'Telegraf service failed to start')
-    ctx.logger.info("GoodLuck! telegraf service is up!\
-                    have an awesome monitoring experience...")
+    ctx.logger.info('GoodLuck! Telegraf service is up!\
+                    Have an awesome monitoring experience...')
+
+
+def download_and_install(telegraf_path='', download_url='', **kwargs):
+    ctx.logger.info('Installing telegraf...')
+    if not telegraf_path:
+        telegraf_path = '/opt/telegraf'
+
+    ctx.instance.runtime_properties['telegraf_path'] = telegraf_path
+
+    if not os.path.exists(telegraf_path):
+        cmd = 'sudo mkdir -p {0}'.format(telegraf_path)
+        subprocess.call(shlex.split(cmd))
+
+    os.chdir(telegraf_path)
+
+    dist = ld.id()
+    if dist in ('ubuntu', 'debian'):
+        if not download_url:
+            download_url = 'http://get.influxdb.org/telegraf/telegraf_0.12.0-1_amd64.deb'
+        ctx.logger.info('Downloading telegraf...')
+        subprocess.call(shlex.split('sudo wget {0}'.format(download_url)))
+        ctx.logger.info('Telegraf downloaded...installing..')
+        installation_file = download_url.rsplit('/', 1)[-1]
+        cmd = 'sudo dpkg -i {0}'.format(installation_file)
+        subprocess.call(shlex.split(cmd))
+        # if return_code != 0:
+        #     raise exceptions.NonRecoverableError(
+        #         'Unable to install Telegraf service')
+    elif dist in ('centos', 'redhat'):
+        if not download_url:
+            download_url = 'sudo wget http://get.influxdb.org/telegraf/telegraf-0.12.0-1.x86_64.rpm'
+        subprocess.call(shlex.split('sudo wget {0}'.format(download_url)))
+        ctx.logger.info('Telegraf downloaded...installing..')
+        installation_file = download_url.rsplit('/', 1)[-1]
+        cmd = 'sudo yum localinstall {0}'.format(installation_file)
+        subprocess.call(shlex.split(cmd))
+    ctx.logger.info('Telegraf service was installed...')
+
+
+def configure(telgraf_config, config_file='',  **kwargs):
+    ctx.logger.info('Configuring telegraf.toml...')
+
+    if not config_file:
+        config_file = ctx.download_resource_and_render('telegraf.conf', template_variables=telgraf_config)
+    cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(config_file)
+    subprocess.Popen(cmd, shell=True)
+    ctx.logger.info('telegraf.conf was configured...')
