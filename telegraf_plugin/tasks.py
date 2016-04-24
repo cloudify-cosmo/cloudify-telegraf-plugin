@@ -29,7 +29,7 @@ from cloudify.decorators import operation
 
 @operation
 def install(telegraf_config, config_file, telegraf_path, download_url, **kwargs):
-    if 'linux' not in sys._platform:
+    if 'linux' not in sys.platform:
         raise exceptions.NonRecoverableError('Error! Telegraf-plugin is available on linux distribution only')
 
     download_and_install(telegraf_path, download_url)
