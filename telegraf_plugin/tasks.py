@@ -91,7 +91,7 @@ def download_and_install(telegraf_path='', download_url='', **kwargs):
 
 
 def configure(telgraf_config, config_file='',  **kwargs):
-    ctx.logger.info('Configuring telegraf.toml...')
+    ctx.logger.info('Configuring telegraf.conf...')
 
     if not config_file:
         config_file = ctx.download_resource_and_render('telegraf.conf', template_variables=telgraf_config)
