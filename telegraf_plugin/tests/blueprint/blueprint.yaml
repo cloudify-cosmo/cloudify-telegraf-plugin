@@ -112,10 +112,10 @@ node_templates:
         install:
             implementation: telegraf.telegraf_plugin.tasks.install
             inputs:
-              telegraf_path: /opt/telegraf
+              telegraf_install_path: /opt/telegraf
               download_url:
-              config_file:
-              telegraf_config:
+              telegraf_config_file:
+              telegraf_config_inputs:
                 outputs:
                   influxdb:
                     urls:
@@ -141,6 +141,7 @@ node_templates:
                       - devtmpfs
         start:
             implementation: telegraf.telegraf_plugin.tasks.start
+
 
 
   influxdb:
