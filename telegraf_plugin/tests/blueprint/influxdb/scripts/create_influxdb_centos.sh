@@ -10,7 +10,7 @@ gpgcheck = 1
 gpgkey = https://repos.influxdata.com/influxdb.key
 EOF
 
-sudo yum install influxdb
+sudo yum -y install influxdb
 sudo service influxdb start
 
 
