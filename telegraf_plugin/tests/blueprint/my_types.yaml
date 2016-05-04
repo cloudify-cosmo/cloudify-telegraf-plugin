@@ -20,6 +20,27 @@ node_types:
               type: string
               default: 8086
 
+  my_types.nodes.InfluxdbCentosNode:
+    derived_from: cloudify.nodes.DBMS
+    properties:
+      influxdb_admin_port:
+        type: string
+        default: 8083
+      influxdb_port:
+        type: string
+        default: 8086
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create: influxdb/scripts/create_influxdb_centos.sh
+        configure: {}
+        start:
+          implementation: influxdb/scripts/start_influxdb.sh
+          inputs:
+            influxdb_port:
+              type: string
+              default: 8086
+
+
 
   my_types.nodes.ElasticsearchServer:
     derived_from: cloudify.nodes.DBMS

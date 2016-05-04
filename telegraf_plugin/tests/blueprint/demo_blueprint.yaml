@@ -161,8 +161,8 @@ node_templates:
         cloudify_agent:
           user: centos
         server:
-          image: 6c3047c6-17b1-4aaf-a657-9229bb481e50
-          flavor: 74ff4015-aee1-4e02-aaa8-1c77b2650394
+          image: 74ff4015-aee1-4e02-aaa8-1c77b2650394
+          flavor: c4b193d2-f331-4250-9b15-bbfde97c462a
           userdata: |
             #!/bin/bash
             echo 127.0.1.1 $(cat /etc/hostname) | sudo tee -a sudo /etc/hosts >/dev/null
@@ -212,7 +212,7 @@ node_templates:
     type: my_types.nodes.ElasticsearchServer
     properties:
        port: 9300
-       clusterName:
+       clusterName: demo
     relationships:
       - type: cloudify.relationships.contained_in
         target: VM_es
@@ -231,7 +231,7 @@ node_templates:
         target: VM_es
 
   influxdb_docker:
-    type: my_types.nodes.InfluxdbNode
+    type: my_types.nodes.InfluxdbCentosNode
     relationships:
       - type: cloudify.relationships.contained_in
         target: VM_docker
