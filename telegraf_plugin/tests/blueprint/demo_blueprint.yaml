@@ -223,15 +223,18 @@ node_templates:
       - type: cloudify.relationships.contained_in
         target: VM_docker
 
-
   influxdb_es:
     type: my_types.nodes.InfluxdbNode
     relationships:
       - type: cloudify.relationships.contained_in
         target: VM_es
+      - type: cloudify.relationships.depends_on
+        target: elasticsearch
 
   influxdb_docker:
     type: my_types.nodes.InfluxdbCentosNode
     relationships:
       - type: cloudify.relationships.contained_in
         target: VM_docker
+      - type: cloudify.relationships.depends_on
+        target: docker
