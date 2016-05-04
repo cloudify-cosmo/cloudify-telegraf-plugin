@@ -84,7 +84,7 @@ def start(telegraf_config_file='', **kwargs):
     #                 deploy=True, start=True, var='')
     ctx.logger.info(
         'GoodLuck! Telegraf service is up!'
-        'Have an awesome monitoring experience...')
+        ' Have an awesome monitoring experience...')
 
 
 def download_telegraf(telegraf_install_path, dist, download_url='', **kwargs):
