@@ -19,7 +19,29 @@ node_types:
             influxdb_port:
               type: string
               default: 8086
-#
+
+
+  my_types.nodes.ElasticsearchServer:
+    derived_from: cloudify.nodes.DBMS
+    properties:
+      port:
+        description: elasticsearch port
+        type: integer
+      clusterName:
+         description: elasticsearch cluster name
+         type: string
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create: elasticsearch/scripts/install-elasticsearch.sh
+
+
+  my_types.nodes.Docker:
+    derived_from: cloudify.nodes.SoftwareComponent
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create: docker/scripts/install-docker.sh
+
+
 #
 #  gihk.nodes.KafkaNode:
 #    derived_from: cloudify.nodes.SoftwareComponent
