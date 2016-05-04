@@ -212,7 +212,7 @@ node_templates:
     type: my_types.nodes.ElasticsearchServer
     properties:
        port: 9300
-       clusterName: demo
+       clusterName: hello-world
     relationships:
       - type: cloudify.relationships.contained_in
         target: VM_es
