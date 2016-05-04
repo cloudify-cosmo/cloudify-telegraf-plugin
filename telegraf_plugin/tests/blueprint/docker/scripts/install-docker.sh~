@@ -14,6 +14,6 @@ gpgkey=https://yum.dockerproject.org/gpg
 EOF
 
 
-sudo yum install docker-engine
+sudo yum -y install docker-engine
 sudo service docker start
 sudo docker run hello-world

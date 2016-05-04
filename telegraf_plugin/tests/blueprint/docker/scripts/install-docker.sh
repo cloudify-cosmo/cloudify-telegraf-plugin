@@ -2,7 +2,7 @@
 
 set -e
 
-sudo yum update
+sudo yum -y update
 
 sudo tee /etc/yum.repos.d/docker.repo <<-'EOF'
 [dockerrepo]
