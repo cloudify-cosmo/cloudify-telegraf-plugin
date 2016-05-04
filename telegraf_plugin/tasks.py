@@ -105,7 +105,7 @@ def download_telegraf(telegraf_install_path, dist, download_url='', **kwargs):
                 'Error! distribution is not supported')
     installation_file = _download_file(download_url, telegraf_install_path)
 
-    ctx.logger.info('Telegraf downloaded...installing..')
+    ctx.logger.info('Telegraf downloaded...')
     return installation_file
 
 
@@ -117,11 +117,12 @@ def install_telegraf(telegraf_install_path, dist, installation_file, **kwargs):
         cmd = 'sudo dpkg -i {0}/{1}'.format(
             telegraf_install_path, installation_file)
     elif dist in ('centos', 'redhat'):
-        cmd = 'sudo yum localinstall {0}/{1}'.format(
+        cmd = 'sudo yum -y localinstall {0}/{1}'.format(
             telegraf_install_path, installation_file)
     else:
         raise exceptions.NonRecoverableError(
             'Error! distribution is not supported')
+    ctx.logger.info(installation_file)
     _run(cmd)
     ctx.logger.info('Telegraf service was installed...')
 
