@@ -202,7 +202,7 @@ node_templates:
                   docker:
                     endpoint: unix:///var/run/docker.sock
                     container_names:
-                     -
+                     - hello-world
                     local: true
                     cluster_health: false
           start:
