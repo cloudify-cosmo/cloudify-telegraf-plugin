@@ -1,9 +1,0 @@
-#!/bin/bash -e
-. $(ctx download-resource "utils")
-
-cat <<EOF | sudo tee /etc/yum.repos.d/influxdb.repo
-
-sudo yum install influxdb
-sudo service influxdb start
-
-
