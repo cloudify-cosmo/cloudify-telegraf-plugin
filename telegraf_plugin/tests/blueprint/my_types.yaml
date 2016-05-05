@@ -61,7 +61,8 @@ node_types:
     interfaces:
       cloudify.interfaces.lifecycle:
         create: docker/scripts/install-docker.sh
-
+        configure: {}
+        start: docker/scripts/start-docker.sh
 
 #
 #  gihk.nodes.KafkaNode:

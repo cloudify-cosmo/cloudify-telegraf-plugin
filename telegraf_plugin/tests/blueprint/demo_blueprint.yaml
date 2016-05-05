@@ -135,8 +135,6 @@ node_templates:
                     - http://localhost:8086
                   database: monitoring_telegraf
                   precision: s
-                datadog:
-                  apikey: 1
 #                kafka:
 #                  brokers:
 #                    - http://localhost:9092
@@ -188,8 +186,6 @@ node_templates:
                       - http://localhost:8086
                     database: monitoring_telegraf
                     precision: s
-                  datadog:
-                    apikey: 1
 #                  kafka:
 #                    brokers:
 #                      - http://localhost:9092
@@ -203,8 +199,6 @@ node_templates:
                     endpoint: unix:///var/run/docker.sock
                     container_names:
                      - hello-world
-                    local: true
-                    cluster_health: false
           start:
               implementation: telegraf.telegraf_plugin.tasks.start
 

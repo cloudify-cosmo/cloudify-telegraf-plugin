@@ -15,5 +15,9 @@ EOF
 
 
 sudo yum -y install docker-engine
+sudo groupadd docker
+sudo usermod -aG docker csntos
+
+
 sudo service docker start
 sudo docker run hello-world
