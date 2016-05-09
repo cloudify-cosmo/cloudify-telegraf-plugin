@@ -3,4 +3,5 @@
 set -e
 
 sudo service docker start
-sudo docker run ubuntu /bin/sleep 600
+sudo docker run ubuntu
+sudo docker run hello-world

@@ -135,14 +135,16 @@ node_templates:
                     - http://localhost:8086
                   database: monitoring_telegraf
                   precision: s
-#                kafka:
-#                  brokers:
-#                    - http://localhost:9092
-#                  topic: telegraf
-#                  compression_codec: 0
-#                  required_acks: -1
-#                  max_retry: 3
-#                  data_format: influx
+                kafka:
+                  brokers:
+                    - http://185.98.148.68:9092
+                    - http://185.98.148.49:9092
+                    - http://185.98.148.180:9092
+                  topic: es
+                  compression_codec: 0
+                  required_acks: -1
+                  max_retry: 3
+                  data_format: influx
               inputs:
                 elasticsearch:
                   servers:
@@ -186,18 +188,21 @@ node_templates:
                       - http://localhost:8086
                     database: monitoring_telegraf
                     precision: s
-#                  kafka:
-#                    brokers:
-#                      - http://localhost:9092
-#                    topic: telegraf
-#                    compression_codec: 0
-#                    required_acks: -1
-#                    max_retry: 3
-#                    data_format: influx
+                  kafka:
+                    brokers:
+                      - http://185.98.148.68:9092
+                      - http://185.98.148.49:9092
+                      - http://185.98.148.180:9092
+                    topic: docker
+                    compression_codec: 0
+                    required_acks: -1
+                    max_retry: 3
+                    data_format: influx
                 inputs:
                   docker:
                     endpoint: unix:///var/run/docker.sock
                     container_names:
+                     - ubuntu
                      - hello-world
           start:
               implementation: telegraf.telegraf_plugin.tasks.start
