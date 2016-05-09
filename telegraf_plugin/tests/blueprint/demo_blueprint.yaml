@@ -137,9 +137,9 @@ node_templates:
                   precision: s
                 kafka:
                   brokers:
-                    - 185.98.148.76:9092
-                    - 185.98.149.195:9092
-                    - 185.98.148.83:9092
+                    - 185.98.148.123:9092
+                    - 185.98.149.12:9092
+                    - 185.98.148.146:9092
                   topic: es
                   compression_codec: 0
                   required_acks: -1
@@ -190,9 +190,9 @@ node_templates:
                     precision: s
                   kafka:
                     brokers:
-                      - 185.98.148.76:9092
-                      - 185.98.149.195:9092
-                      - 185.98.148.83:9092
+                      - 185.98.148.123:9092
+                      - 185.98.149.12:9092
+                      - 185.98.148.146:9092
                     topic: docker
                     compression_codec: 0
                     required_acks: -1
