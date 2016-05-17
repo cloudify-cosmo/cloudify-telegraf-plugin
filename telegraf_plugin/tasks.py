@@ -72,8 +72,14 @@ def start(telegraf_config_file='', **kwargs):
     If telegraf service was already running -
     it will restart it and will use updated configuration file.
     """
+    dist = distro.id()
+
     if not telegraf_config_file:
-        telegraf_config_file = '/etc/telegraf/telegraf.conf'
+        if dist in ('ubuntu', 'debian'):
+            telegraf_config_file = '/etc/telegraf/opt/telegraf.conf'
+        elif dist in ('centos', 'redhat'):
+            telegraf_config_file = '/etc/telegraf/telegraf.conf'
+
     if not os.path.isfile(telegraf_config_file):
         raise exceptions.NonRecoverableError("Config file doesn't exists")
 
