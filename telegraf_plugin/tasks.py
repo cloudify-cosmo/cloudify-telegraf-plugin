@@ -154,7 +154,7 @@ def configure(telgraf_config, telegraf_config_file='', **kwargs):
         cmd = 'sudo mv {0} /etc/opt/telegraf/telegraf.conf'.format(telegraf_config_file)
     elif dist in ('centos', 'redhat'):
         cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(telegraf_config_file)
-    _run('sudo mv {0} /etc/telegraf/telegraf.conf'.format(telegraf_config_file))
+    _run(cmd)
     ctx.logger.info('telegraf.conf was configured...')
 
 
