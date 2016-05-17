@@ -72,16 +72,18 @@ def start(telegraf_config_file='', **kwargs):
     If telegraf service was already running -
     it will restart it and will use updated configuration file.
     """
-    ctx.logger.info('Starting telegraf service...')
     if not telegraf_config_file:
         telegraf_config_file = '/etc/telegraf/telegraf.conf'
     if not os.path.isfile(telegraf_config_file):
         raise exceptions.NonRecoverableError("Config file doesn't exists")
 
+    # ctx.logger.info('Installing serv...')
+    # _run('sudo pip install serv')
+    # ctx.logger.info('Starting telegraf service...')
+    # cmd = 'sudo serv generate /usr/lib/telegraf/scripts/telegraf.service --name telegraf --deploy --start'
+    # _run(cmd)
+
     _run('sudo service telegraf restart')
-    # logger.configure()
-    # Serv().generate('/usr/lib/telegraf/scripts/telegraf.service', name='telegraf',
-    #                 deploy=True, start=True, var='')
     ctx.logger.info(
         'GoodLuck! Telegraf service is up!'
         ' Have an awesome monitoring experience...')

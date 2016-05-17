@@ -137,12 +137,13 @@ node_templates:
                   precision: s
                 kafka:
                   brokers:
-                    - 185.98.148.123:9092
-                    - 185.98.149.12:9092
-                    - 185.98.148.146:9092
+                    - 185.98.149.223:9092
+                    - 185.98.149.21:9092
+                    - 185.98.149.238:9092
                   topic: es
+                  routing_tag: host
                   compression_codec: 0
-                  required_acks: -1
+                  required_acks: 0
                   max_retry: 3
                   data_format: influx
               inputs:
@@ -190,20 +191,35 @@ node_templates:
                     precision: s
                   kafka:
                     brokers:
-                      - 185.98.148.123:9092
-                      - 185.98.149.12:9092
-                      - 185.98.148.146:9092
+                      - 185.98.149.223:9092
+                      - 185.98.149.21:9092
+                      - 185.98.149.238:9092
                     topic: docker
+                    routing_tag: host
                     compression_codec: 0
-                    required_acks: -1
+                    required_acks: 0
                     max_retry: 3
                     data_format: influx
                 inputs:
-                  docker:
-                    endpoint: unix:///var/run/docker.sock
-                    container_names:
-                     - ubuntu
-                     - hello-world
+#                  docker:
+#                    endpoint: unix:///var/run/docker.sock
+#                    container_names:
+#                     - ubuntu
+#                     - hello-world
+                  kernel:
+                  mem:
+                  system:
+                  processes:
+                  swap:
+                  cpu:
+                    percpu: false
+                    totalcpu: true
+                    fielddrop:
+                      - time_*
+                  disk:
+                    ignore_fs:
+                      - tmpfs
+                      - devtmpfs
           start:
               implementation: telegraf.telegraf_plugin.tasks.start
 
@@ -216,11 +232,11 @@ node_templates:
       - type: cloudify.relationships.contained_in
         target: VM_es
 
-  docker:
-    type: my_types.nodes.Docker
-    relationships:
-      - type: cloudify.relationships.contained_in
-        target: VM_docker
+#  docker:
+#    type: my_types.nodes.Docker
+#    relationships:
+#      - type: cloudify.relationships.contained_in
+#        target: VM_docker
 
   influxdb_es:
     type: my_types.nodes.InfluxdbNode
@@ -235,5 +251,5 @@ node_templates:
     relationships:
       - type: cloudify.relationships.contained_in
         target: VM_docker
-      - type: cloudify.relationships.depends_on
-        target: docker
+#      - type: cloudify.relationships.depends_on
+#        target: docker
