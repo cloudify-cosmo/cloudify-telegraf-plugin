@@ -72,14 +72,8 @@ def start(telegraf_config_file='', **kwargs):
     If telegraf service was already running -
     it will restart it and will use updated configuration file.
     """
-    dist = distro.id()
-
     if not telegraf_config_file:
-        if dist in ('ubuntu', 'debian'):
-            telegraf_config_file = '/etc/opt/telegraf/telegraf.conf'
-        elif dist in ('centos', 'redhat'):
-            telegraf_config_file = '/etc/telegraf/telegraf.conf'
-
+        telegraf_config_file = '/etc/telegraf/telegraf.conf'
     if not os.path.isfile(telegraf_config_file):
         raise exceptions.NonRecoverableError("Config file doesn't exists")
 
@@ -105,7 +99,7 @@ def download_telegraf(telegraf_install_path, dist, download_url='', **kwargs):
 
     if not download_url:
         if dist in ('ubuntu', 'debian'):
-            download_url = 'http://get.influxdb.org/telegraf/telegraf_0.1.9_amd64.deb'
+            download_url = 'http://get.influxdb.org/telegraf/telegraf_0.12.0-1_amd64.deb'
         elif dist in ('centos', 'redhat'):
             download_url = 'http://get.influxdb.org/telegraf/telegraf-0.12.0-1.x86_64.rpm'
         else:
@@ -143,9 +137,6 @@ def configure(telgraf_config, telegraf_config_file='', **kwargs):
     """
     ctx.logger.info('Configuring telegraf.conf...')
 
-    dist = distro.id()
-
-
     if not telegraf_config_file:
         telegraf_config_file_temp = pkg_resources.resource_string(
             telegraf_plugin.__name__, 'resources/telegraf.conf')
@@ -156,11 +147,7 @@ def configure(telgraf_config, telegraf_config_file='', **kwargs):
     else:
         ctx.download_resource_and_render(telegraf_config_file,
                                          template_variables=telgraf_config)
-    if dist in ('ubuntu', 'debian'):
-        cmd = 'sudo mv {0} /etc/opt/telegraf/telegraf.conf'.format(telegraf_config_file)
-    elif dist in ('centos', 'redhat'):
-        cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(telegraf_config_file)
-    _run(cmd)
+    _run('sudo mv {0} /etc/telegraf/telegraf.conf'.format(telegraf_config_file))
     ctx.logger.info('telegraf.conf was configured...')
 
 
