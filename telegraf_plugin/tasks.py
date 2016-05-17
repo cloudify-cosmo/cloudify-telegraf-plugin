@@ -76,7 +76,7 @@ def start(telegraf_config_file='', **kwargs):
 
     if not telegraf_config_file:
         if dist in ('ubuntu', 'debian'):
-            telegraf_config_file = '/etc/telegraf/opt/telegraf.conf'
+            telegraf_config_file = '/etc/opt/telegraf/telegraf.conf'
         elif dist in ('centos', 'redhat'):
             telegraf_config_file = '/etc/telegraf/telegraf.conf'
 
