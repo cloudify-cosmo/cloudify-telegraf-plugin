@@ -137,9 +137,9 @@ node_templates:
                   precision: s
                 kafka:
                   brokers:
-                    - 185.98.149.223:9092
+                    - 185.98.148.8:9092
                     - 185.98.149.21:9092
-                    - 185.98.149.238:9092
+                    - 185.98.148.82:9092
                   topic: es
                   routing_tag: host
                   compression_codec: 0
@@ -191,9 +191,9 @@ node_templates:
                     precision: s
                   kafka:
                     brokers:
-                      - 185.98.149.223:9092
+                      - 185.98.148.8:9092
                       - 185.98.149.21:9092
-                      - 185.98.149.238:9092
+                      - 185.98.148.82:9092
                     topic: docker
                     routing_tag: host
                     compression_codec: 0

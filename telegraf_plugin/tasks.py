@@ -147,6 +147,10 @@ def configure(telgraf_config, telegraf_config_file='', **kwargs):
     else:
         ctx.download_resource_and_render(telegraf_config_file,
                                          template_variables=telgraf_config)
+    if dist in ('ubuntu', 'debian'):
+        cmd = 'sudo mv {0} /etc/opt/telegraf/telegraf.conf'.format(telegraf_config_file)
+    elif dist in ('centos', 'redhat'):
+        cmd = 'sudo mv {0} /etc/telegraf/telegraf.conf'.format(telegraf_config_file)
     _run('sudo mv {0} /etc/telegraf/telegraf.conf'.format(telegraf_config_file))
     ctx.logger.info('telegraf.conf was configured...')
 
