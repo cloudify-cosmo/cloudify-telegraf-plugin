@@ -137,6 +137,9 @@ def configure(telgraf_config, telegraf_config_file='', **kwargs):
     """
     ctx.logger.info('Configuring telegraf.conf...')
 
+    dist = distro.id()
+
+
     if not telegraf_config_file:
         telegraf_config_file_temp = pkg_resources.resource_string(
             telegraf_plugin.__name__, 'resources/telegraf.conf')
