@@ -24,7 +24,7 @@ setup(
     author='Gigaspaces',
     author_email='cosmo-admin@gigaspaces.com',
     packages=['telegraf_plugin'],
-    package_data={'telegraf_plugin': ['resources/telegraf.conf']},
+    package_data={'telegraf_plugin': ['resources/telegraf_old.conf']},
     license='LICENSE',
     description='Plugin for running telegraf monitoring interface',
     install_requires=[
