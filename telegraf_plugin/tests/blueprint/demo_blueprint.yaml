@@ -137,21 +137,16 @@ node_templates:
                   precision: s
                 kafka:
                   brokers:
-                    - 185.98.148.8:9092
-                    - 185.98.149.21:9092
-                    - 185.98.148.82:9092
+                    - 185.43.218.207:9092
+                    - 185.43.218.187:9092
+                    - 185.43.218.194:9092
                   topic: es
                   routing_tag: host
-                  compression_codec: 0
-                  required_acks: 0
-                  max_retry: 3
-                  data_format: influx
               inputs:
                 elasticsearch:
                   servers:
                    - http://localhost:9200
                   local: true
-                  cluster_health: false
         start:
             implementation: telegraf.telegraf_plugin.tasks.start
 
@@ -191,15 +186,11 @@ node_templates:
                     precision: s
                   kafka:
                     brokers:
-                      - 185.98.148.8:9092
-                      - 185.98.149.21:9092
-                      - 185.98.148.82:9092
+                      - 185.43.218.207:9092
+                      - 185.43.218.187:9092
+                      - 185.43.218.194:9092
                     topic: docker
                     routing_tag: host
-                    compression_codec: 0
-                    required_acks: 0
-                    max_retry: 3
-                    data_format: influx
                 inputs:
 #                  docker:
 #                    endpoint: unix:///var/run/docker.sock
@@ -214,12 +205,9 @@ node_templates:
                   cpu:
                     percpu: false
                     totalcpu: true
-                    fielddrop:
-                      - time_*
+                    drop:
+                      - cpu_time
                   disk:
-                    ignore_fs:
-                      - tmpfs
-                      - devtmpfs
           start:
               implementation: telegraf.telegraf_plugin.tasks.start
 

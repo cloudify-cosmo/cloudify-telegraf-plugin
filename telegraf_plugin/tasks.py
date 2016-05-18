@@ -73,13 +73,13 @@ def start(telegraf_config_file='', **kwargs):
     it will restart it and will use updated configuration file.
     """
     if not telegraf_config_file:
-        telegraf_config_file = '/etc/telegraf/telegraf.conf'
+        telegraf_config_file = '/etc/opt/telegraf/telegraf.conf'
     if not os.path.isfile(telegraf_config_file):
         raise exceptions.NonRecoverableError("Config file doesn't exists")
 
     # ctx.logger.info('Installing serv...')
     # _run('sudo pip install serv')
-    # ctx.logger.info('Starting telegraf service...')
+    ctx.logger.info('Starting telegraf service...')
     # cmd = 'sudo serv generate /usr/lib/telegraf/scripts/telegraf.service --name telegraf --deploy --start'
     # _run(cmd)
 
@@ -99,9 +99,9 @@ def download_telegraf(telegraf_install_path, dist, download_url='', **kwargs):
 
     if not download_url:
         if dist in ('ubuntu', 'debian'):
-            download_url = 'http://get.influxdb.org/telegraf/telegraf_0.12.0-1_amd64.deb'
+            download_url = 'https://dl.influxdata.com/telegraf/releases/telegraf_0.1.9_amd64.deb'
         elif dist in ('centos', 'redhat'):
-            download_url = 'http://get.influxdb.org/telegraf/telegraf-0.12.0-1.x86_64.rpm'
+            download_url = 'http://get.influxdb.org/telegraf/telegraf-0.1.9-1.x86_64.rpm'
         else:
             raise exceptions.NonRecoverableError(
                 'Error! distribution is not supported')
@@ -139,7 +139,7 @@ def configure(telgraf_config, telegraf_config_file='', **kwargs):
 
     if not telegraf_config_file:
         telegraf_config_file_temp = pkg_resources.resource_string(
-            telegraf_plugin.__name__, 'resources/telegraf.conf')
+            telegraf_plugin.__name__, 'resources/telegraf_old.conf')
         configuration = jinja2.Template(telegraf_config_file_temp)
         telegraf_config_file = '/tmp/telegraf.conf'
         with open(telegraf_config_file, 'w') as f:
@@ -147,7 +147,7 @@ def configure(telgraf_config, telegraf_config_file='', **kwargs):
     else:
         ctx.download_resource_and_render(telegraf_config_file,
                                          template_variables=telgraf_config)
-    _run('sudo mv {0} /etc/telegraf/telegraf.conf'.format(telegraf_config_file))
+    _run('sudo mv {0} /etc/opt/telegraf/telegraf.conf'.format(telegraf_config_file))
     ctx.logger.info('telegraf.conf was configured...')
 
 
