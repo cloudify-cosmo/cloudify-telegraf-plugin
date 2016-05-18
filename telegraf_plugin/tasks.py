@@ -99,7 +99,7 @@ def download_telegraf(telegraf_install_path, dist, download_url='', **kwargs):
 
     if not download_url:
         if dist in ('ubuntu', 'debian'):
-            download_url = 'https://dl.influxdata.com/telegraf/releases/telegraf_0.1.9_amd64.deb'
+            download_url = 'http://get.influxdb.org/telegraf/telegraf_0.1.9_amd64.deb'
         elif dist in ('centos', 'redhat'):
             download_url = 'http://get.influxdb.org/telegraf/telegraf-0.1.9-1.x86_64.rpm'
         else:
