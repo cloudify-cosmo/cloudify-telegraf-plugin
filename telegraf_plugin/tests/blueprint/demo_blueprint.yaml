@@ -134,7 +134,6 @@ node_templates:
                   urls:
                     - http://localhost:8086
                   database: monitoring_telegraf
-                  precision: s
                 kafka:
                   brokers:
                     - 185.43.218.207:9092
@@ -183,8 +182,6 @@ node_templates:
                     urls:
                       - http://localhost:8086
                     database: monitoring_telegraf
-                    precision: s
-                  kafka:
                     brokers:
                       - 185.43.218.207:9092
                       - 185.43.218.187:9092
@@ -192,15 +189,9 @@ node_templates:
                     topic: docker
                     routing_tag: host
                 inputs:
-#                  docker:
-#                    endpoint: unix:///var/run/docker.sock
-#                    container_names:
-#                     - ubuntu
-#                     - hello-world
-                  kernel:
                   mem:
                   system:
-                  processes:
+                  io:
                   swap:
                   cpu:
                     percpu: false
