@@ -136,9 +136,9 @@ node_templates:
                   database: monitoring_telegraf
                 kafka:
                   brokers:
-                    - 185.43.218.207:9092
-                    - 185.43.218.187:9092
-                    - 185.43.218.194:9092
+                    - 185.98.149.108:9092
+                    - 185.98.149.12:9092
+                    - 185.98.148.87:9092
                   topic: es
                   routing_tag: host
               inputs:
@@ -182,10 +182,11 @@ node_templates:
                     urls:
                       - http://localhost:8086
                     database: monitoring_telegraf
+                  kafka:
                     brokers:
-                      - 185.43.218.207:9092
-                      - 185.43.218.187:9092
-                      - 185.43.218.194:9092
+                      - 185.98.149.108:9092
+                      - 185.98.149.12:9092
+                      - 185.98.148.87:9092
                     topic: docker
                     routing_tag: host
                 inputs:
@@ -202,6 +203,21 @@ node_templates:
           start:
               implementation: telegraf.telegraf_plugin.tasks.start
 
+
+  influxdb_es:
+    type: my_types.nodes.InfluxdbNode
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: VM_es
+
+
+  influxdb_docker:
+    type: my_types.nodes.InfluxdbCentosNode
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: VM_docker
+
+
   elasticsearch:
     type: my_types.nodes.ElasticsearchServer
     properties:
@@ -210,6 +226,10 @@ node_templates:
     relationships:
       - type: cloudify.relationships.contained_in
         target: VM_es
+      - type: cloudify.relationships.depends_on
+        target: influxdb_es
+      - type: cloudify.relationships.depends_on
+        target: influxdb_docker
 
 #  docker:
 #    type: my_types.nodes.Docker
@@ -217,18 +237,3 @@ node_templates:
 #      - type: cloudify.relationships.contained_in
 #        target: VM_docker
 
-  influxdb_es:
-    type: my_types.nodes.InfluxdbNode
-    relationships:
-      - type: cloudify.relationships.contained_in
-        target: VM_es
-      - type: cloudify.relationships.depends_on
-        target: elasticsearch
-
-  influxdb_docker:
-    type: my_types.nodes.InfluxdbCentosNode
-    relationships:
-      - type: cloudify.relationships.contained_in
-        target: VM_docker
-#      - type: cloudify.relationships.depends_on
-#        target: docker
