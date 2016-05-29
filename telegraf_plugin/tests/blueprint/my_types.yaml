@@ -91,3 +91,11 @@ node_types:
 #          implementation: components/telegraf/scripts/configure_telegraf.sh
 #        start:
 #          implementation: components/telegraf/scripts/start_telegraf.sh
+
+relationships:
+
+  my_types.relationships.ConfigureIp:
+    derived_from: cloudify.relationships.depends_on
+    target_interfaces:
+      cloudify.interfaces.relationship_lifecycle:
+        create: influxdb/scripts/configure_ip.sh

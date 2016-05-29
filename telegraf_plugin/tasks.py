@@ -13,14 +13,11 @@
 #    * See the License for the specific language governing permissions and
 #    * limitations under the License.
 ########
-
 import os
 import sys
 import shlex
 import subprocess
 import pkg_resources
-
-from serv.serv import Serv, logger
 
 import jinja2
 import distro
@@ -78,10 +75,11 @@ def start(telegraf_config_file='', **kwargs):
     if not os.path.isfile(telegraf_config_file):
         raise exceptions.NonRecoverableError("Config file doesn't exists")
 
-    _run('sudo service telegraf restart')
-    # logger.configure()
-    # Serv().generate('/usr/lib/telegraf/scripts/telegraf.service', name='telegraf',
-    #                 deploy=True, start=True, var='')
+    try:
+        _run('sudo systemctl restart telegraf')
+    except SystemExit:
+        _run('sudo service telegraf restart')
+
     ctx.logger.info(
         'GoodLuck! Telegraf service is up!'
         'Have an awesome monitoring experience...')
@@ -117,7 +115,7 @@ def install_telegraf(telegraf_install_path, dist, installation_file, **kwargs):
         cmd = 'sudo dpkg -i {0}/{1}'.format(
             telegraf_install_path, installation_file)
     elif dist in ('centos', 'redhat'):
-        cmd = 'sudo yum localinstall {0}/{1}'.format(
+        cmd = 'sudo yum localinstall -y {0}/{1}'.format(
             telegraf_install_path, installation_file)
     else:
         raise exceptions.NonRecoverableError(
