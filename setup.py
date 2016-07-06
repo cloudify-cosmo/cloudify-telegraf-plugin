@@ -24,9 +24,10 @@ setup(
     author='Gigaspaces',
     author_email='cosmo-admin@gigaspaces.com',
     packages=['telegraf_plugin'],
+    package_data={'telegraf_plugin': ['resources/telegraf.conf']},
     license='LICENSE',
     description='Plugin for running telegraf monitoring interface',
     install_requires=[
-        'cloudify-plugins-common>=3.3', 'ld==0.5.0'
+        'cloudify-plugins-common>=3.3', 'distro==0.5.0', 'serv==0.2.0'
     ]
 )

@@ -20,7 +20,7 @@ import unittest
 from cloudify.test_utils import workflow_test
 
 
-class TestPlugin(unittest.TestCase):
+class TestTelegrafPlugin(unittest.TestCase):
 
     @workflow_test(path.join('blueprint', 'blueprint.yaml'),
                    resources_to_copy=[path.join('blueprint',
