@@ -109,7 +109,7 @@ def download_telegraf(download_url='', telegraf_install_path='', **kwargs):
     return installation_file
 
 
-def install_telegraf(telegraf_install_path, installation_file, **kwargs):
+def install_telegraf(installation_file, telegraf_install_path, **kwargs):
     """Depacking telegraf package."""
     ctx.logger.info('Installing telegraf...')
 
