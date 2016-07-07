@@ -47,6 +47,17 @@ def install(telegraf_config_inputs,
         raise exceptions.NonRecoverableError('''Error!
          Telegraf-plugin is available on linux distribution only''')
 
+    if not telegraf_install_path:
+        telegraf_install_path = os.path.join('/', 'opt', 'telegraf')
+    ctx.instance.runtime_properties[
+        'telegraf_install_path'] = telegraf_install_path
+    if os.path.isfile(telegraf_install_path):
+        raise exceptions.NonRecoverableError(
+            "Error! /opt/telegraf file already exists, can't create dir.")
+
+    if not os.path.exists(telegraf_install_path):
+        _run('sudo mkdir -p {0}'.format(telegraf_install_path))
+
     installation_file = download_telegraf(download_url, telegraf_config_inputs)
     install_telegraf(installation_file, telegraf_install_path)
     configure(telegraf_config_file, telegraf_config_inputs)
@@ -82,17 +93,6 @@ def download_telegraf(download_url='', telegraf_install_path='', **kwargs):
     Default url set to be version 0.12.0
     anf downloaded from official influxdb site.
     """
-    if not telegraf_install_path:
-        telegraf_install_path = os.path.join('/', 'opt', 'telegraf')
-    ctx.instance.runtime_properties[
-        'telegraf_install_path'] = telegraf_install_path
-    if os.path.isfile(telegraf_install_path):
-        raise exceptions.NonRecoverableError(
-            "Error! /opt/telegraf file already exists, can't create dir.")
-
-    if not os.path.exists(telegraf_install_path):
-        _run('sudo mkdir -p {0}'.format(telegraf_install_path))
-
     ctx.logger.info('Downloading telegraf...')
 
     if not download_url:
