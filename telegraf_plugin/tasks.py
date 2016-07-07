@@ -58,7 +58,7 @@ def install(telegraf_config_inputs,
     if not os.path.exists(telegraf_install_path):
         _run('sudo mkdir -p {0}'.format(telegraf_install_path))
 
-    installation_file = download_telegraf(download_url, telegraf_config_inputs)
+    installation_file = download_telegraf(download_url, telegraf_install_path)
     install_telegraf(installation_file, telegraf_install_path)
     configure(telegraf_config_file, telegraf_config_inputs)
 
