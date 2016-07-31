@@ -203,7 +203,7 @@ node_templates:
   VM_DB:
       type: cloudify.openstack.nodes.Server
       properties:
-        resource_id: monitoring_centos_server
+        resource_id: influx_db_server
         cloudify_agent:
           user: ubuntu
         server:
@@ -216,7 +216,7 @@ node_templates:
             echo "nameserver 8.8.8.8" | sudo tee -a sudo /etc/resolvconf/resolv.conf.d/base > /dev/null
       relationships:
         - type: cloudify.openstack.server_connected_to_floating_ip
-          target: public_ip2
+          target: public_ip3
         - type: cloudify.openstack.server_connected_to_security_group
           target: sg_influxdb13
 
