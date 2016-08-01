@@ -121,10 +121,10 @@ def install_telegraf(installation_file, telegraf_install_path, **kwargs):
     """Depacking telegraf package."""
     ctx.logger.info('Installing telegraf...')
 
-    if distro in ('ubuntu', 'debian'):
+    if dist in ('ubuntu', 'debian'):
         install_cmd = 'sudo dpkg -i {0}'.format(
             os.path.join(telegraf_install_path, installation_file))
-    elif distro in ('centos', 'redhat'):
+    elif dist in ('centos', 'redhat'):
         install_cmd = 'sudo yum localinstall -y {0}'.format(
             os.path.join(telegraf_install_path, installation_file))
     else:
