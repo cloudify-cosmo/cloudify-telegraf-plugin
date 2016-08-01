@@ -88,7 +88,7 @@ class TesttelegrafPlugin(unittest.TestCase):
                         {'urls': ['http://localhost:8086'],
                          'database': 'monitoring_telegraf'},
                         }
-            }
+        }
 
         tasks.configure('', dict1_valid)
         self.assertTrue(os.path.exists(CONFIG_FILE))
