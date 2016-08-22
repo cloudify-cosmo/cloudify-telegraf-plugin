@@ -50,14 +50,13 @@ def install(telegraf_config_inputs,
     if 'linux' not in sys.platform:
         raise exceptions.NonRecoverableError(
             'Error! Telegraf-plugin is available on linux distribution only')
-    print(telegraf_install_path, os.path.isfile(telegraf_install_path))
 
     if not telegraf_install_path:
         telegraf_install_path = TELEGRAF_PATH_DEFAULT
     if os.path.isfile(telegraf_install_path):
         raise ValueError(
             format("Error! {0} file already exists, can't create dir.",
-                   telegraf_config_file))
+                   telegraf_install_path))
 
     installation_file = download_telegraf(download_url, telegraf_install_path)
     install_telegraf(installation_file, telegraf_install_path)
@@ -86,7 +85,7 @@ def start(**kwargs):
     ctx.logger.info(
         'GoodLuck! Telegraf service is up!'
         'Have an awesome monitoring experience...')
-    return proc
+    return proc.aggr_stdout
 
 
 def download_telegraf(download_url='', telegraf_install_path='', **kwargs):

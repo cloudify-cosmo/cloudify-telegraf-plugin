@@ -7,7 +7,7 @@ imports:
     # to speed things up, it is possible downloading this file,
     # including it in the blueprint directory and importing it
     # instead.
-    - http://www.getcloudify.org/spec/cloudify/3.5m1/types.yaml
+    - http://www.getcloudify.org/spec/cloudify/4.0m1/types.yaml
     - http://www.getcloudify.org/spec/fabric-plugin/1.4.1/plugin.yaml
     - http://www.getcloudify.org/spec/openstack-plugin/1.4/plugin.yaml
     # relative import of plugin.yaml that resides in the blueprint directory
@@ -121,8 +121,8 @@ node_templates:
         target: public_ip1
       - type: my_types.relationships.ConfigureIp
         target: VM_DB
-#      - type: cloudify.openstack.server_connected_to_security_group
-#        target: sg_influxdb13
+      - type: cloudify.openstack.server_connected_to_security_group
+        target: sg_influxdb13
     interfaces:
       cloudify.interfaces.monitoring_agent:
         install:
@@ -135,7 +135,7 @@ node_templates:
               outputs:
                 influxdb:
                   urls:
-                    - http://{{ ctx.instance.runtime_properties.VM_DB_ip }}:8086
+                    - { concat: ['http://', get_attribute: [public_ip3, floating_ip_address], ':8066'] }
                   database: monitoring_telegraf
               inputs:
                 mem:
@@ -152,53 +152,53 @@ node_templates:
             implementation: telegraf.telegraf_plugin.tasks.start
 
   VM_centos:
-      type: cloudify.openstack.nodes.Server
-      properties:
-        resource_id: monitoring_centos_server
-        cloudify_agent:
-          user: centos
-        server:
-          image: 74ff4015-aee1-4e02-aaa8-1c77b2650394
-          flavor: c4b193d2-f331-4250-9b15-bbfde97c462a
-          userdata: |
-            #!/bin/bash
-            echo 127.0.1.1 $(cat /etc/hostname) | sudo tee -a sudo /etc/hosts >/dev/null
-            echo "nameserver 8.8.8.8" | sudo tee -a sudo /etc/resolv.conf > /dev/null
-            echo "nameserver 8.8.8.8" | sudo tee -a sudo /etc/resolvconf/resolv.conf.d/base > /dev/null
-      relationships:
-        - type: cloudify.openstack.server_connected_to_floating_ip
-          target: public_ip2
-        - type: my_types.relationships.ConfigureIp
-          target: VM_DB
-#        - type: cloudify.openstack.server_connected_to_security_group
-#          target: sg_influxdb13
-      interfaces:
-        cloudify.interfaces.monitoring_agent:
-          install:
-            implementation: telegraf.telegraf_plugin.tasks.install
-            inputs:
-              telegraf_install_path: /opt/telegraf
-              download_url:
-              telegraf_config_file:
-              telegraf_config_inputs:
-                outputs:
-                  influxdb:
-                    urls:
-                      - http://{{ ctx.instance.runtime_properties.VM_DB_ip }}:8086
-                    database: monitoring_telegraf
-                inputs:
-                  mem:
-                  system:
-                  io:
-                  swap:
-                  cpu:
-                    percpu: false
-                    totalcpu: true
-                    drop:
-                      - cpu_time
-                  disk:
-          start:
-              implementation: telegraf.telegraf_plugin.tasks.start
+    type: cloudify.openstack.nodes.Server
+    properties:
+      resource_id: monitoring_centos_server
+      cloudify_agent:
+        user: centos
+      server:
+        image: 74ff4015-aee1-4e02-aaa8-1c77b2650394
+        flavor: c4b193d2-f331-4250-9b15-bbfde97c462a
+        userdata: |
+          #!/bin/bash
+          echo 127.0.1.1 $(cat /etc/hostname) | sudo tee -a sudo /etc/hosts >/dev/null
+          echo "nameserver 8.8.8.8" | sudo tee -a sudo /etc/resolv.conf > /dev/null
+          echo "nameserver 8.8.8.8" | sudo tee -a sudo /etc/resolvconf/resolv.conf.d/base > /dev/null
+    relationships:
+      - type: cloudify.openstack.server_connected_to_floating_ip
+        target: public_ip2
+      - type: my_types.relationships.ConfigureIp
+        target: VM_DB
+      - type: cloudify.openstack.server_connected_to_security_group
+        target: sg_influxdb13
+    interfaces:
+      cloudify.interfaces.monitoring_agent:
+        install:
+          implementation: telegraf.telegraf_plugin.tasks.install
+          inputs:
+            telegraf_install_path: /opt/telegraf
+            download_url:
+            telegraf_config_file:
+            telegraf_config_inputs:
+              outputs:
+                influxdb:
+                  urls:
+                    - { concat: ['http://', get_attribute: [public_ip3, floating_ip_address], ':8066'] }
+                  database: monitoring_telegraf
+              inputs:
+                mem:
+                system:
+                io:
+                swap:
+                cpu:
+                  percpu: false
+                  totalcpu: true
+                  drop:
+                    - cpu_time
+                disk:
+        start:
+            implementation: telegraf.telegraf_plugin.tasks.start
 
   VM_DB:
       type: cloudify.openstack.nodes.Server

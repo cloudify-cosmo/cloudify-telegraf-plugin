@@ -213,7 +213,6 @@ class TestTelegrafPlugin(unittest.TestCase):
     @patch('telegraf_plugin.tasks.ctx', MockCloudifyContext())
     def test_06_start(self, *args):
         output = tasks.start()
-        output = output.aggr_stdout
 
         self.assertIn('OK', output)
 
@@ -227,9 +226,9 @@ class TestTelegrafPlugin(unittest.TestCase):
         config = tempfile.NamedTemporaryFile(delete=False).name
 
         tasks._run('sudo mv {0} /etc/telegraf/telegraf.conf'.format(config))
-        output = tasks.start()
-        output = output.aggr_stdout
-        self.assertIn('FAILED', output)
+        with self.assertRaises(SystemExit) as err:
+            tasks.start()
+        self.assertEqual(err.exception.code, 1)
 
 
 class TestTelegrafInstall(unittest.TestCase):
