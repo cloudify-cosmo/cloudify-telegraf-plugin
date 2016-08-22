@@ -18,73 +18,60 @@ import os
 import shutil
 import unittest
 import tempfile
-import subprocess
 
 import distro
 from mock import patch
 
 from cloudify.mocks import MockCloudifyContext
+
 from .. import tasks
 
 
-distro = distro.id()
-PATH = os.path.dirname(__file__)
+disto_id = distro.id()
 TEMP_TELEGRAF = os.path.join(tempfile.gettempdir(), 'telegraf')
-CONFIG_FILE = os.path.join(TEMP_TELEGRAF, 'telegraf.conf')
-
-
-def mock_install_ctx():
-    return MockCloudifyContext()
-
-
-def mock_get_resource_from_manager(resource_path):
-    with open(resource_path) as f:
-        return f.read()
 
 
 class TesttelegrafPlugin(unittest.TestCase):
 
+    def setUp(self):
+        os.mkdir(TEMP_TELEGRAF)
+
     def tearDown(self):
-        # remove telegraf temp dir
+        # Remove telegraf temp dir
         if os.path.exists(TEMP_TELEGRAF):
-            try:
-                shutil.rmtree(TEMP_TELEGRAF)
-            except:
-                subprocess.call(['sudo', 'rm', '-rf', TEMP_TELEGRAF])
+            shutil.rmtree(TEMP_TELEGRAF)
 
-    @patch('telegraf_plugin.tasks.TELEGRAF_CONFIG_FILE_DEFAULT', CONFIG_FILE)
     @patch('telegraf_plugin.tasks.TELEGRAF_PATH_DEFAULT', TEMP_TELEGRAF)
-    @patch('telegraf_plugin.tasks.ctx', mock_install_ctx())
+    @patch('telegraf_plugin.tasks.ctx', MockCloudifyContext())
     def test_download_telegraf(self):
-        '''test download_telegraf function'''
-        os.mkdir(TEMP_TELEGRAF)
+        '''Test download_telegraf function
+        '''
 
         filename = tasks.download_telegraf('', TEMP_TELEGRAF)
-        if distro in ('ubuntu', 'debian'):
+        if disto_id in ('ubuntu', 'debian'):
             self.assertEqual(filename, 'telegraf_0.12.0-1_amd64.deb')
-        elif distro in ('centos', 'redhat'):
+        elif disto_id in ('centos', 'redhat'):
             self.assertEqual(filename, 'telegraf-0.12.0-1.x86_64.rpm')
         self.assertTrue(os.path.exists(os.path.join(TEMP_TELEGRAF, filename)))
 
-    @patch('telegraf_plugin.tasks.TELEGRAF_CONFIG_FILE_DEFAULT', CONFIG_FILE)
     @patch('telegraf_plugin.tasks.TELEGRAF_PATH_DEFAULT', TEMP_TELEGRAF)
-    @patch('telegraf_plugin.tasks.ctx', mock_install_ctx())
+    @patch('telegraf_plugin.tasks.ctx', MockCloudifyContext())
     def test_download_telegraf_path_not_exists(self):
-        '''test download - verify nothing downloaded'''
+        '''Test download - verify nothing downloaded
+        '''
         filename = tasks.download_telegraf('', TEMP_TELEGRAF)
 
-        if distro in ('ubuntu', 'debian'):
+        if disto_id in ('ubuntu', 'debian'):
             self.assertEqual(filename, 'telegraf_0.12.0-1_amd64.deb')
-        elif distro in ('centos', 'redhat'):
+        elif disto_id in ('centos', 'redhat'):
             self.assertEqual(filename, 'telegraf-0.12.0-1.x86_64.rpm')
         self.assertTrue(os.path.exists(os.path.join(TEMP_TELEGRAF, filename)))
 
-    @patch('telegraf_plugin.tasks.TELEGRAF_CONFIG_FILE_DEFAULT', CONFIG_FILE)
     @patch('telegraf_plugin.tasks.TELEGRAF_PATH_DEFAULT', TEMP_TELEGRAF)
-    @patch('telegraf_plugin.tasks.ctx', mock_install_ctx())
+    @patch('telegraf_plugin.tasks.ctx', MockCloudifyContext())
     def test_download_file(self):
-        '''test download -  verify file exists after download'''
-        os.mkdir(TEMP_TELEGRAF)
+        '''Test download -  verify file exists after download
+        '''
 
         filename = tasks._download_file(
             'http://get.influxdb.org/telegraf/' +
@@ -93,11 +80,21 @@ class TesttelegrafPlugin(unittest.TestCase):
         self.assertEqual(filename, 'telegraf_0.12.0-1_amd64.deb')
         self.assertTrue(os.path.exists(os.path.join(TEMP_TELEGRAF, filename)))
 
-    @patch('telegraf_plugin.tasks.TELEGRAF_CONFIG_FILE_DEFAULT', CONFIG_FILE)
     @patch('telegraf_plugin.tasks.TELEGRAF_PATH_DEFAULT', TEMP_TELEGRAF)
-    @patch('telegraf_plugin.tasks.ctx', mock_install_ctx())
+    @patch('telegraf_plugin.tasks.ctx', MockCloudifyContext())
     def test_download_file_failed(self):
-        '''test download - verify nothing downloaded'''
-        os.mkdir(TEMP_TELEGRAF)
+        '''Test download - verify nothing downloaded
+        '''
 
         self.assertRaises(ValueError, tasks._download_file, None, None)
+
+    @patch('telegraf_plugin.tasks.ctx', MockCloudifyContext())
+    def test_run_command(self):
+        cmd = 'mkdir /tmp/test'
+        output = tasks._run(cmd)
+        self.assertEqual(output.returncode, 0)
+
+    @patch('telegraf_plugin.tasks.ctx', MockCloudifyContext())
+    def test_run_command_failed(self):
+        self.assertRaises(OSError, tasks._run, "invalid command")
+        self.assertRaises(SystemExit, tasks._run, "mkdir /opt/test")

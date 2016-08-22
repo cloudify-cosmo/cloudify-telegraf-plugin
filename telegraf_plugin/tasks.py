@@ -48,16 +48,16 @@ def install(telegraf_config_inputs,
     Only linux distributions are supported.
     """
     if 'linux' not in sys.platform:
-        raise exceptions.NonRecoverableError('''Error!
-         Telegraf-plugin is available on linux distribution only''')
+        raise exceptions.NonRecoverableError(
+            'Error! Telegraf-plugin is available on linux distribution only')
+    print(telegraf_install_path, os.path.isfile(telegraf_install_path))
 
     if not telegraf_install_path:
         telegraf_install_path = TELEGRAF_PATH_DEFAULT
-    ctx.instance.runtime_properties[
-        'telegraf_install_path'] = telegraf_install_path
     if os.path.isfile(telegraf_install_path):
-        raise exceptions.NonRecoverableError(
-            "Error! /opt/telegraf file already exists, can't create dir.")
+        raise ValueError(
+            format("Error! {0} file already exists, can't create dir.",
+                   telegraf_config_file))
 
     installation_file = download_telegraf(download_url, telegraf_install_path)
     install_telegraf(installation_file, telegraf_install_path)
@@ -75,17 +75,18 @@ def start(**kwargs):
     ctx.logger.info('Starting telegraf service...')
     telegraf_config_file = TELEGRAF_CONFIG_FILE_DEFAULT
     if not os.path.isfile(telegraf_config_file):
-        raise exceptions.NonRecoverableError(
+        raise ValueError(
             "Can't start the service. Wrong config file provided")
 
     if os.path.exists('/usr/bin/systemctl'):
-        _run('sudo systemctl restart telegraf')
+        proc = _run('sudo systemctl restart telegraf')
     else:
-        _run('sudo service telegraf restart')
+        proc = _run('sudo service telegraf restart')
 
     ctx.logger.info(
         'GoodLuck! Telegraf service is up!'
         'Have an awesome monitoring experience...')
+    return proc
 
 
 def download_telegraf(download_url='', telegraf_install_path='', **kwargs):
@@ -143,7 +144,6 @@ def configure(telegraf_config_file='', telgraf_config='', **kwargs):
     """
     ctx.logger.info('Configuring Telegraf...')
     dest_file = os.path.join(tempfile.gettempdir(), 'telegraf.conf')
-
     if telegraf_config_file:
         try:
             ctx.download_resource_and_render(telegraf_config_file,
@@ -191,7 +191,7 @@ def _download_file(url, destination):
     return filename
 
 
-def _run(command, retries=0, ignore_failures=False):
+def _run(command):
     if isinstance(command, str):
         command = shlex.split(command)
     stderr = subprocess.PIPE
@@ -202,12 +202,7 @@ def _run(command, retries=0, ignore_failures=False):
     proc.aggr_stdout, proc.aggr_stderr = proc.communicate()
     if proc.returncode != 0:
         command_str = ' '.join(command)
-        if retries:
-            ctx.logger.warn('Failed running command: {0}. Retrying. '
-                            '({1} left)'.format(command_str, retries))
-            proc = _run(command, retries - 1)
-        elif not ignore_failures:
-            ctx.logger.error('Failed running command: {0} ({1}).'.format(
-                command_str, proc.aggr_stderr))
-            sys.exit(1)
+        ctx.logger.error('Failed running command: {0} ({1}).'.format(
+            command_str, proc.aggr_stderr))
+        sys.exit(1)
     return proc
