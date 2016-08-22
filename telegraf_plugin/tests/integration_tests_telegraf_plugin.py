@@ -226,9 +226,8 @@ class TestTelegrafPlugin(unittest.TestCase):
         config = tempfile.NamedTemporaryFile(delete=False).name
 
         tasks._run('sudo mv {0} /etc/telegraf/telegraf.conf'.format(config))
-        with self.assertRaises(SystemExit) as err:
-            tasks.start()
-        self.assertEqual(err.exception.code, 1)
+        output = tasks.start()
+        self.assertIn('FAILED', output)
 
 
 class TestTelegrafInstall(unittest.TestCase):
