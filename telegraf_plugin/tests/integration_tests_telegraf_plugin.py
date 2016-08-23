@@ -29,7 +29,7 @@ from .. import tasks
 
 
 distro_id = distro.id()
-PATH = os.path.dirname(__file__)
+PATH = os.path.join(os.path.expanduser('~'), 'cloudify-telegraf-plugin')
 TEMP_TELEGRAF = os.path.join(tempfile.gettempdir(), 'telegraf')
 CONFIG_FILE = os.path.join(TEMP_TELEGRAF, 'telegraf.conf')
 
