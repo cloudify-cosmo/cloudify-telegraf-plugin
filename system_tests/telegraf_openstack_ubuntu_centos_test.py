@@ -29,13 +29,14 @@ class TelegrafTest(TestCase):
         outputs = self.client.deployments.outputs.get(self.test_id)
         outputs = outputs['outputs']
         ip = outputs['ip']
+
         self.verify_results(ip)
 
         self.execute_uninstall()
 
-def verify_results(self, ip):
-    cmd = "curl -G 'http://{0}:8086/query?pretty=true'" \
-          " --data-urlencode \"db=monitoring_telegraf\" " \
-          "--data-urlencode \"q=SELECT * from /.*/\"".format(ip)
-    data = subprocess.check_output(cmd, shell=True)
-    self.assertIn('cpu', data)
+    def verify_results(self, ip):
+        cmd = "curl -G 'http://{0}:8086/query?pretty=true'" \
+              " --data-urlencode \"db=monitoring_telegraf\" " \
+              "--data-urlencode \"q=SELECT * from /.*/\"".format(ip)
+        data = subprocess.check_output(cmd, shell=True)
+        self.assertIn('cpu', data)
