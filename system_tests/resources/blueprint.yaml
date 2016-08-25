@@ -11,7 +11,7 @@ imports:
     - http://www.getcloudify.org/spec/fabric-plugin/1.4.1/plugin.yaml
     - http://www.getcloudify.org/spec/openstack-plugin/1.4/plugin.yaml
     # relative import of plugin.yaml that resides in the blueprint directory
-    - http://www.getcloudify.org/spec/aws-plugin/1.4.2.dev0/plugin.yaml
+    - http://www.getcloudify.org/spec/telegraf-plugin/0.1.dev0/plugin.yaml
     - my_types.yaml
 
 
