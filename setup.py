@@ -20,7 +20,7 @@ from setuptools import setup
 
 setup(
     name='cloudify-telegraf-plugin',
-    version='0.1',
+    version='0.1.dev0',
     author='Gigaspaces',
     author_email='cosmo-admin@gigaspaces.com',
     packages=['telegraf_plugin'],
